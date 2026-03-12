@@ -33,7 +33,7 @@ validate $? "$INSTANCE_NAME is the Instance Name"
 if [ $INSTANCE_NAME == 'frontend']; then
  IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
  validate $? "$IP is the Private IP"
-elif
+else
  IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].PrivateIpAddress' --output text)
  validate $? "$IP is the public IP"
 fi
