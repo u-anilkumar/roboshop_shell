@@ -39,24 +39,27 @@ else
 fi
 
 aws route53 change-resource-record-sets --hosted-zone-id $HOST_ZONE_ID \
- --change-batch 
+ --change-batch '
  {
-  "Changes": [
-    {
-      "Action": "UPSERT",
-      "ResourceRecordSet": {
-        "Name": $INSTANCE_NAME.$DNS_NAME,
-        "Type": "A",
-        "TTL": 1,
-        "ResourceRecords": [
-          {
-            "Value": $IP
-          }
-        ] 
-      }
-    }
-  ]
-}
+        "Comment": "Updating record",
+        "Changes": [
+            {
+            "Action": "UPSERT",
+            "ResourceRecordSet": {
+                "Name": "'$RECORD_NAME'",
+                "Type": "A",
+                "TTL": 1,
+                "ResourceRecords": [
+                {
+                    "Value": "'$IP'"
+                }
+                ]
+            }
+            }
+        ]
+    }'
+  
+
 validate $? "A records Update is"
 
 done
