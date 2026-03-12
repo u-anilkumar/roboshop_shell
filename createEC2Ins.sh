@@ -32,10 +32,12 @@ validate $? "$INSTANCE_NAME is the Instance Name"
 
 if [ $INSTANCE_NAME == 'frontend']; then
  IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
- validate $? "$IP is the Private IP"
+ validate $? "$IP is the Public IP"
+ RECORD_NAME=$DNS_NAME
 else
  IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].PrivateIpAddress' --output text)
- validate $? "$IP is the public IP"
+ validate $? "$IP is the private IP"
+ RECORD_NAME=$INSTANCE_NAME.$DNS_NAME
 fi
 
 aws route53 change-resource-record-sets --hosted-zone-id $HOST_ZONE_ID \
