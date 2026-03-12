@@ -25,10 +25,10 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value='$instance'}]' \
     --query 'Instances[0].InstanceId' \
     --output text)
-validate() $? "$INSTANCE_ID Instance generation"    
+validate $? "$INSTANCE_ID Instance generation"    
 
 INSTANCE_NAME=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Name`].Value[]' --output text)
-validate() $? "$INSTANCE_NAME is the Instance Name"
+validate $? "$INSTANCE_NAME is the Instance Name"
 
 if [ $INSTANCE_NAME == 'frontend']; then
  IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
@@ -57,7 +57,7 @@ aws route53 change-resource-record-sets --hosted-zone-id $HOST_ZONE_ID \
     }
   ]
 }
-validate() $? "A records Update is"
+validate $? "A records Update is"
 
 done
 
