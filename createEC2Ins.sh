@@ -30,7 +30,7 @@ validate $? "$INSTANCE_ID Instance generation"
 INSTANCE_NAME=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Name`].Value[]' --output text)
 validate $? "$INSTANCE_NAME is the Instance Name"
 
-if [ $INSTANCE_NAME == 'frontend']; then
+if [ $INSTANCE_NAME == 'frontend' ]; then
  IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
  validate $? "$IP is the Public IP"
  RECORD_NAME=$DNS_NAME
