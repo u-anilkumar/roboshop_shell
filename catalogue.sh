@@ -86,7 +86,7 @@ SCHEMA_CHECK=$(mongosh "mongodb://$Mongo_Host:27017/catalogue" --quiet --eval "
 ")
 
 echo -e " schema check vale is $SCHEMA_CHECK"
-if [ $SCHEMA_CHECK -eq 'none' ]; then
+if [ "$SCHEMA_CHECK" == "none" ]; then
 mongosh --host $Mongo_Host </app/db/master-data.js &>>$Log_File
 validate $? "loading Db's..."
 else
