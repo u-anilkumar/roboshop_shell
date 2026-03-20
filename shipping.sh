@@ -31,7 +31,7 @@ echo -e "$R Please execute the script with sudo access $N" | tee -a $Log_File
 exit 1
 fi
 
-dnf install maven -y
+dnf install maven -y &>>$Log_File
 validate $? "maven installation.."
 
 id roboshop &>>$Log_File
@@ -56,6 +56,10 @@ mvn clean package &>>$Log_File
 validate $? "dependencies installation..."
 mv target/shipping-1.0.jar shipping.jar 
 validate $? "moving shipping.jar to current working directory..."
+
+
+cp $Curr_Dir/shipping.service /etc/systemd/system/shipping.service
+validate $? "copying shipping.service to systemd folder..."
 
 systemctl daemon-reload &>>$Log_File
 
