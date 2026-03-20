@@ -1,4 +1,12 @@
 #!/bin/bash
+#check if root user
+
+USER_ID=$(id -u)
+
+if [ $USER_ID -ne 0 ]; then
+echo -e "$R Please execute the script with sudo access $N" | tee -a $Log_File
+exit 1
+fi
 
 Curr_Dir=$PWD
 Log_Dir="/var/log/shell-mongo/"
