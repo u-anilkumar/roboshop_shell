@@ -12,4 +12,6 @@ if [ $USER_ID -ne 0 ]; then
 
 echo -e "$R Please execute the $G script with$Y sudo $N access"
 exit 1
+else 
+echo -e "$G user has root access"
 fi
