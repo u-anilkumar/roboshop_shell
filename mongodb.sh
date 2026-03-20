@@ -17,9 +17,11 @@ validate()
     echo -e " $2... $R FAILURE $N"
     else 
     echo -e " $2... $G SUCCESS $N"
+    fi
 }
 
 echo -e "user id is $G $USER_ID $N"
+
 if [ $USER_ID -ne 0 ]; then
 
 echo -e "$R Please execute the script with sudo access $N"
