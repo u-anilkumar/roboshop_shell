@@ -41,7 +41,8 @@ dnf install nodejs -y &>>$Log_File
 validate $? "Install nodejs.." 
 
 app_user=$(id roboshop)
-if [ $app_user -ne 0 ]; then
+
+if [ $? -ne 0 ]; then
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
 validate $? "System user creation..."
 else 
@@ -78,7 +79,7 @@ SCHEMA_CHECK=$(mongosh "mongodb://$Mongo_Host:27017/catalogue" --quiet --eval "
   var info = db.getCollectionInfos({name: 'products'})[0];
   info && info.options ? info.options.validator : 'none'
 ")
-if [$SCHEMA_CHECK == 'none' ]; then
+if [ $SCHEMA_CHECK == 'none' ]; then
 mongosh --host $Mongo_Host </app/db/master-data.js &>>$Log_File
 else
 echo -e "Schema is already loaded $Y SKIPPING $N" | tee -a $Log_File
