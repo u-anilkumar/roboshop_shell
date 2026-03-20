@@ -1,3 +1,9 @@
+#!/bin/bash
+#check if root user
+
+USER_ID=$(id -u)
+
+
 Curr_Dir=$PWD
 Log_Dir="/var/log/shell-shipping/"
 mkdir -p $Log_Dir
