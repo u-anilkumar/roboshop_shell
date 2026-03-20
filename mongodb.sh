@@ -28,5 +28,5 @@ echo -e "$R Please execute the script with sudo access $N"
 exit 1
 fi
 
-cp Curr_Dir/mongodb.repo /etc/yum.repos.d/mongo.repo
+cp $Curr_Dir/mongodb.repo /etc/yum.repos.d/mongo.repo
 validate $? "Copying repo file repo folder"
