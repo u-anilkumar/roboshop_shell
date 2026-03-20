@@ -40,7 +40,7 @@ validate $? "Enable nodejs 20.."
 dnf install nodejs -y &>>$Log_File
 validate $? "Install nodejs.." 
 
-app_user=$(id roboshop)
+app_user=$(id roboshop) &>>$Log_File
 
 if [ $? -ne 0 ]; then
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
@@ -51,11 +51,15 @@ fi
 
 mkdir -p /app 
 cd /app
+rm -rf /app/*
+validate $? "removing existing code ..."
+
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$Log_File
 validate $? "catalogue code download.."
 unzip /tmp/catalogue.zip &>>$Log_File
 
-npm intsall &>>$Log_File
+npm install &>>$Log_File
+validate $? "Installing Dependencies..."
 
 cp $Curr_Dir/catalogue.service /etc/systemd/system/catalogue.service
 validate $? "copying catalogue.service to systemd folder..."
@@ -73,6 +77,7 @@ cp $Curr_Dir/mongodb.repo /etc/yum.repos.d/mongo.repo
 validate $? "copying mongo.repo ..."
 
 dnf install mongodb-mongosh -y &>>$Log_File
+validate $? "Mongo installation..."
 
 #SCHEMA=$(mongosh "mongodb://$Mongo_Host" --quiet --eval "db.getCollectionInfos({name: '<collectionName>'})[0].options.validator" <catalogue>)
 SCHEMA_CHECK=$(mongosh "mongodb://$Mongo_Host:27017/catalogue" --quiet --eval "
@@ -81,6 +86,7 @@ SCHEMA_CHECK=$(mongosh "mongodb://$Mongo_Host:27017/catalogue" --quiet --eval "
 ")
 if [ $SCHEMA_CHECK == 'none' ]; then
 mongosh --host $Mongo_Host </app/db/master-data.js &>>$Log_File
+validate $? "loading Db's..."
 else
 echo -e "Schema is already loaded $Y SKIPPING $N" | tee -a $Log_File
 fi
