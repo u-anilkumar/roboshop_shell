@@ -39,15 +39,16 @@ fi
 cp $Curr_Dir/mongodb.repo /etc/yum.repos.d/mongo.repo
 validate $? "Copying repo file repo folder"
 
-dnf install mongodb-org -y 
+dnf install mongodb-org -y &>>$Log_File
 validate $? "mongodb installation..."
 
-systemctl enable mongod 
-systemctl start mongod 
+systemctl enable mongod &>>$Log_File
+validate $? "Ebable MongoDb ..."
+systemctl start mongod  &>>$Log_File
 validate $? "mongodb start..."
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
 validate $? "Repacing IP using sed ..."
 
-systemctl restart mongod
-validate $? "Restart os mongodb ...."
+systemctl restart mongod &>>$Log_File
+validate $? "Restart of mongodb ...."
