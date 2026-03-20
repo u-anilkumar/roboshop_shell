@@ -79,19 +79,17 @@ validate $? "copying mongo.repo ..."
 dnf install mongodb-mongosh -y &>>$Log_File
 validate $? "Mongo installation..."
 
-#SCHEMA=$(mongosh "mongodb://$Mongo_Host" --quiet --eval "db.getCollectionInfos({name: '<collectionName>'})[0].options.validator" <catalogue>)
-SCHEMA_CHECK=$(mongosh "mongodb://$Mongo_Host:27017/catalogue" --quiet --eval "
-  var info = db.getCollectionInfos({name: 'products'})[0];
-  info && info.options ? info.options.validator : 'none'
-")
 
-echo -e " schema check vale is $SCHEMA_CHECK"
-if [ "$SCHEMA_CHECK" == "none" ]; then
-mongosh --host $Mongo_Host </app/db/master-data.js &>>$Log_File
-validate $? "loading Db's..."
+INDEX=$(mongosh --host $Mongo_Host --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
+
+if [ $INDEX -le 0 ]; then
+    mongosh --host $Mongo_Host </app/db/master-data.js
+    VALIDATE $? "Loading products"
 else
-echo -e "Schema is already loaded $Y SKIPPING $N" | tee -a $Log_File
+    echo -e "Products already loaded ... $Y SKIPPING $N"
 fi
 
+systemctl restart catalogue
+VALIDATE $? "Restarting catalogue"
 
 #mongosh --host $Mongo_Host
