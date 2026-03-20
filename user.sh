@@ -9,7 +9,7 @@ Log_Dir="/var/log/shell-user/"
 mkdir -p $Log_Dir
 Log_File="$Log_Dir/$0.log"
 
-Mongo_Host=mongodb.anildevops.online
+
 #enable colours
 R='\e[31m'
 G='\e[32m'
@@ -40,7 +40,7 @@ validate $? "Enable nodejs 20.."
 dnf install nodejs -y &>>$Log_File
 validate $? "Install nodejs.." 
 
-app_user=$(id roboshop) &>>$Log_File
+id roboshop &>>$Log_File
 
 if [ $? -ne 0 ]; then
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
